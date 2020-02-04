@@ -26,7 +26,7 @@ constructor(private http: HttpClient) { }
 
 
 private countryUrl = 'https://api.openaq.org/v1/countries';  // URL to web api
-private measurementsUrl = 'https://api.openaq.org/v1/measurements?country=';  // URL to web api
+private measurementsUrl = 'https://api.openaq.org/v1/measurements?has_geo=true&country=';  // URL to web api
 
   markers: Marker[] = [
     {

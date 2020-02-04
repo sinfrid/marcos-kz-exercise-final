@@ -4,13 +4,19 @@ import {
   ComponentFactoryResolver,
   ComponentRef,
   Injector,
-  DoCheck,NgModule, ViewChild
+  DoCheck,
+  NgModule,
+  ViewChild
 } from "@angular/core";
 
 import { tileLayer, latLng, marker, Marker } from "leaflet";
 import { HTMLMarkerComponent } from "./html-marker.component";
 import { DataService } from "./data.service";
-import {NgSelectModule, NgOption, NgSelectComponent} from '@ng-select/ng-select';
+import {
+  NgSelectModule,
+  NgOption,
+  NgSelectComponent
+} from "@ng-select/ng-select";
 
 interface MarkerMetaData {
   name: String;
@@ -20,16 +26,17 @@ interface MarkerMetaData {
 
 @Component({
   selector: "my-app",
-  templateUrl: './app.component.html',
+  templateUrl: "./app.component.html",
   styleUrls: ["./app.component.css"]
 })
 export class AppComponent implements DoCheck {
-
   isbeingSearched: boolean = false;
-  @ViewChild('select1') select1Comp: NgSelectComponent;
+  @ViewChild("select1") select1Comp: NgSelectComponent;
 
   public countries = [];
+  bounds = [];
   map;
+  public defaultCountry;
   markers: MarkerMetaData[] = [];
   options = {
     layers: [tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png")],
@@ -43,8 +50,9 @@ export class AppComponent implements DoCheck {
     private injector: Injector
   ) {}
 
-  ngOnInit(){
-         this.getCountries();
+  ngOnInit() {
+    this.getCountries();
+    this.defaultCountry = ["FR"];
   }
 
   onMapReady(map) {
@@ -53,11 +61,11 @@ export class AppComponent implements DoCheck {
   }
 
   ngAfterViewInit(): void {
-    this.addMarker('FR');
-   
+    this.addMarker("FR");
   }
 
   addMarker(country) {
+
     this.dataService.getMarkers(country).subscribe((res: any) => {
       for (const c of res) {
         // dynamically instantiate a HTMLMarkerComponent
@@ -84,32 +92,36 @@ export class AppComponent implements DoCheck {
         const marker = L.marker([lat, lon]);
 
         // add popup functionality
-        
+
         marker.bindPopup(popupContent).openPopup();
         marker.addTo(this.map);
 
         // add a metadata object into a local array which helps us
-      // keep track of the instantiated markers for removing/disposing them later
-      this.markers.push({
-        name: c.city,
-        markerInstance: marker,
-        componentInstance: component
-      });
+        // keep track of the instantiated markers for removing/disposing them later
+        this.markers.push({
+          name: c.city,
+          markerInstance: marker,
+          componentInstance: component
+        });
+
+        this.bounds.push([lat,lon]);
       }
+
+      this.map.fitBounds(this.bounds);
+
     });
   }
 
   removeMarker() {
 
+    
     for (const c of this.markers) {
-      
-        // remove the marker from the map
-        c.markerInstance.removeFrom(this.map);
-
-        // destroy the component to avoid memory leaks
-        //c.componentInstance.destroy();
-
-      }   
+      // remove the marker from the map
+      //c.markerInstance.removeFrom(this.map);
+      this.map.removeLayer(c.markerInstance);
+      // destroy the component to avoid memory leaks
+      //c.componentInstance.destroy();
+    }
   }
 
   // simulate some change which needs
@@ -125,10 +137,11 @@ export class AppComponent implements DoCheck {
     });
   }
 
-    public refreshMap(event) {
-      this.addMarker(event.code) 
-      this.removeMarker();
-    }
+  public refreshMap(event) {
+    this.removeMarker();
+    this.addMarker(event.code);
+   
+  }
 
   // This is a lifecycle method of an Angular component which gets invoked whenever for
   // our component change detection is triggered
@@ -140,20 +153,19 @@ export class AppComponent implements DoCheck {
     });
   }
 
-  OnOpen(){
-      if(!this.isbeingSearched)
-      {
-        this.select1Comp.close()      
-      }
+  OnOpen() {
+    if (!this.isbeingSearched) {
+      this.select1Comp.close();
     }
+  }
 
-    OnSearch(){
-      this.isbeingSearched = true;
-      this.select1Comp.open()
-    }
+  OnSearch() {
+    this.isbeingSearched = true;
+    this.select1Comp.open();
+  }
 
-    OnBlue(){
-      this.isbeingSearched = false;
-      this.select1Comp.close()
-    }
+  OnBlue() {
+    this.isbeingSearched = false;
+    this.select1Comp.close();
+  }
 }

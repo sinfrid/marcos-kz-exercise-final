@@ -1,13 +1,19 @@
 <div id="map" leaflet [leafletOptions]="options" (leafletMapReady)="onMapReady($event)">
 </div>
 
-<ng-select [items]="countries" #select1
-      bindLabel="name"
-      bindValue="code"
-      placeholder="Select value"
-      (open)= OnOpen()
-      (search) = OnSearch()
-      (blur) = OnBlue()
-      (change)="refreshMap($event)"
-      [(ngModel)]="selectedCountryId">
-</ng-select>
+<div class="container fixed-top">
+  <div class="row">
+    <div class="col-lg-4">
+        <ng-select [items]="countries" #select1
+              bindLabel="name"
+              bindValue="code"
+              placeholder="Select value"
+              (open)= OnOpen()
+              (search) = OnSearch()
+              (blur) = OnBlue()
+              (change)="refreshMap($event)"
+              [(ngModel)]="defaultCountry">
+        </ng-select>
+    </div>    
+  </div>
+</div>
