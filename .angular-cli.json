@@ -1,0 +1,16 @@
+{
+  "apps": [{
+    "styles": [
+      "styles.css"
+    ],
+    "assets": [
+        "assets",
+        "favicon.ico",
+        {
+          "glob": "**/*",
+          "input": "../node_modules/leaflet/dist/images",
+          "output": "./assets/"
+        }
+      ]
+  }]
+}
