@@ -33,13 +33,20 @@ export class AppComponent implements DoCheck {
   isbeingSearched: boolean = false;
   @ViewChild("select1") select1Comp: NgSelectComponent;
 
+private _opened: boolean = false;
+ 
+  private _toggleSidebar() {
+    this._opened = !this._opened;
+  }
+
   public countries = [];
   bounds = [];
   map;
   public defaultCountry;
   markers: MarkerMetaData[] = [];
   options = {
-    layers: [tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png")]
+    layers: [tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png")],
+    zoomControl: false
   };
 
   constructor(
@@ -56,6 +63,9 @@ export class AppComponent implements DoCheck {
   onMapReady(map) {
     // get a local reference to the map as we need it later
     this.map = map;
+    L.control.zoom({
+        position: 'bottomright'
+    }).addTo(map);
   }
 
   ngAfterViewInit(): void {

@@ -7,10 +7,10 @@ import { AppComponent } from './app.component';
 import { HTMLMarkerComponent } from './html-marker.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DataService } from './data.service';
-
+import { SidebarModule } from 'ng-sidebar';
 
 @NgModule({
-  imports:      [ BrowserModule, FormsModule,HttpClientModule,NgSelectModule, LeafletModule.forRoot() ],
+  imports:      [ BrowserModule, FormsModule,HttpClientModule,NgSelectModule, LeafletModule.forRoot(),SidebarModule.forRoot() ],
   declarations: [ AppComponent, HTMLMarkerComponent ],
   providers: [ DataService ],
   // IMPORTANT! Dynamic components need to be registered here

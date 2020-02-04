@@ -3,11 +3,11 @@
 
 <div class="container fixed-top">
   <div class="row">
-    <div class="col-lg-4">
+    <div class="col-xs-8 col-sm-6 col-md-4 col-lg-6" >
         <ng-select [items]="countries" #select1
               bindLabel="name"
               bindValue="code"
-              placeholder="Select value"
+              placeholder="Select country"
               (open)= OnOpen()
               (search) = OnSearch()
               (blur) = OnBlue()
