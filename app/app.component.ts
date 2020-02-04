@@ -39,9 +39,7 @@ export class AppComponent implements DoCheck {
   public defaultCountry;
   markers: MarkerMetaData[] = [];
   options = {
-    layers: [tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png")],
-    zoom: 6,
-    center: latLng(51.505, -0.09)
+    layers: [tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png")]
   };
 
   constructor(
@@ -65,7 +63,6 @@ export class AppComponent implements DoCheck {
   }
 
   addMarker(country) {
-
     this.dataService.getMarkers(country).subscribe((res: any) => {
       for (const c of res) {
         // dynamically instantiate a HTMLMarkerComponent
@@ -104,20 +101,15 @@ export class AppComponent implements DoCheck {
           componentInstance: component
         });
 
-        this.bounds.push([lat,lon]);
+        this.bounds.push([lat, lon]);
       }
 
       this.map.fitBounds(this.bounds);
-
     });
   }
 
   removeMarker() {
-
-    
     for (const c of this.markers) {
-      // remove the marker from the map
-      //c.markerInstance.removeFrom(this.map);
       this.map.removeLayer(c.markerInstance);
       // destroy the component to avoid memory leaks
       //c.componentInstance.destroy();
@@ -140,7 +132,6 @@ export class AppComponent implements DoCheck {
   public refreshMap(event) {
     this.removeMarker();
     this.addMarker(event.code);
-   
   }
 
   // This is a lifecycle method of an Angular component which gets invoked whenever for
