@@ -7,10 +7,11 @@ import { AppComponent } from './app.component';
 import { HTMLMarkerComponent } from './html-marker.component';
 
 import { DataService } from './data.service';
+import { SearchComponent } from './search/search.component';
 
 @NgModule({
   imports:      [ BrowserModule, FormsModule,HttpClientModule, LeafletModule.forRoot() ],
-  declarations: [ AppComponent, HTMLMarkerComponent ],
+  declarations: [ AppComponent, HTMLMarkerComponent, SearchComponent ],
   providers: [ DataService ],
   // IMPORTANT! Dynamic components need to be registered here
   entryComponents: [HTMLMarkerComponent],
