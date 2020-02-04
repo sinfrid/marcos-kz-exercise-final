@@ -24,6 +24,10 @@ export class DataService {
 
 constructor(private http: HttpClient) { }
 
+
+private countryUrl = 'https://api.openaq.org/v1/countries';  // URL to web api
+private measurementsUrl = 'https://api.openaq.org/v1/measurements?country=';  // URL to web api
+
   markers: Marker[] = [
     {
       id: 1,
@@ -39,9 +43,9 @@ constructor(private http: HttpClient) { }
     }
   ];
 
-  getMarkers(): Observable<Measurement[]> {
+  getMarkers(country): Observable<Measurement[]> {
     return this.http
-        .get("https://api.openaq.org/v1/measurements?country=FR")
+        .get(this.measurementsUrl + country)
         .pipe(map(result=>result["results"]))
 }
 
@@ -54,6 +58,10 @@ constructor(private http: HttpClient) { }
       // just add a random number at the end
       marker.description = `Some random value ${Math.random() * 100}`;
     }
+  }
+  
+  getCountries (){
+  return this.http.get(this.countryUrl);
   }
 
 }

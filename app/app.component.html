@@ -1,0 +1,14 @@
+<div id="map" leaflet [leafletOptions]="options" (leafletMapReady)="onMapReady($event)">
+</div>
+<button (click)="addMarker()">Add markers</button>
+<button (click)="mutateMarkerData()">Mutate data</button>
+
+<div class="dropdown">
+  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+    Dropdown
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+    <li *ngFor="let result of countries.results"><a class="dropdown-item" (click)="refreshMap($event, result.code)">{{result.name}}</a></li>
+  </ul>
+</div>

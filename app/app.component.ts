@@ -6,8 +6,8 @@ import {
   Injector,
   DoCheck
 } from "@angular/core";
-import { tileLayer, latLng, marker, Marker } from "leaflet";
 
+import { tileLayer, latLng, marker, Marker } from "leaflet";
 import { HTMLMarkerComponent } from "./html-marker.component";
 import { DataService } from "./data.service";
 
@@ -19,25 +19,11 @@ interface MarkerMetaData {
 
 @Component({
   selector: "my-app",
-  template: `
-    <div
-      style="height: 400px; width: 600px"
-      leaflet
-      [leafletOptions]="options"
-      (leafletMapReady)="onMapReady($event)"
-    ></div>
-    <button (click)="addMarker()">Add markers</button>
-    <button (click)="mutateMarkerData()">Mutate data</button>
-    <hr />
-    <span
-      *ngFor="let marker of markers"
-      style="border:1px solid black; margin:5px;"
-      >{{ marker.name }}
-      <a href="#" (click)="removeMarker(marker)">(remove)</a></span
-    >
-  `
+  templateUrl: './app.component.html',
+  styleUrls: ["./app.component.css"]
 })
 export class AppComponent implements DoCheck {
+  public countries = [];
   map;
   markers: MarkerMetaData[] = [];
   options = {
@@ -52,17 +38,22 @@ export class AppComponent implements DoCheck {
     private injector: Injector
   ) {}
 
+  onInit() :void{
+        
+  }
+
   onMapReady(map) {
     // get a local reference to the map as we need it later
     this.map = map;
   }
 
   ngAfterViewInit(): void {
-    this.addMarker();
+    this.addMarker('FR');
+    this.getCountries();
   }
 
-  addMarker() {
-    this.dataService.getMarkers().subscribe((res: any) => {
+  addMarker(country) {
+    this.dataService.getMarkers(country).subscribe((res: any) => {
       for (const c of res) {
         // dynamically instantiate a HTMLMarkerComponent
         const factory = this.resolver.resolveComponentFactory(
@@ -103,16 +94,17 @@ export class AppComponent implements DoCheck {
     });
   }
 
-  removeMarker(marker) {
-    // remove it from the array meta objects
-    const idx = this.markers.indexOf(marker);
-    this.markers.splice(idx, 1);
+  removeMarker() {
 
-    // remove the marker from the map
-    marker.markerInstance.removeFrom(this.map);
+    for (const c of this.markers) {
+      
+        // remove the marker from the map
+        c.markerInstance.removeFrom(this.map);
 
-    // destroy the component to avoid memory leaks
-    marker.componentInstance.destroy();
+        // destroy the component to avoid memory leaks
+        //c.componentInstance.destroy();
+
+      }   
   }
 
   // simulate some change which needs
@@ -121,6 +113,18 @@ export class AppComponent implements DoCheck {
     // this provocates changes which the components on the markers have to re-render
     this.dataService.changeMarkerData();
   }
+
+  getCountries(): void {
+    this.dataService.getCountries().subscribe((data: any[]) => {
+      this.countries = data;
+    });
+  }
+
+    public refreshMap(event, country) {
+  
+      this.addMarker(country) 
+      this.removeMarker();
+    }
 
   // This is a lifecycle method of an Angular component which gets invoked whenever for
   // our component change detection is triggered
