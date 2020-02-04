@@ -1,4 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable} from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, Subject } from "rxjs";
+import { debounceTime, distinctUntilChanged, switchMap, map } from "rxjs/operators";
 import { LatLngExpression} from 'leaflet';
 
 export class Marker {
@@ -8,8 +11,19 @@ export class Marker {
   position: LatLngExpression
 }
 
+export class Measurement {
+    code: string;
+    count: number;
+    locations: number;
+    cities: number;
+    name: string;
+}
+
 @Injectable()
 export class DataService {
+
+constructor(private http: HttpClient) { }
+
   markers: Marker[] = [
     {
       id: 1,
@@ -25,9 +39,11 @@ export class DataService {
     }
   ];
 
-  getMarkers() {
-    return this.markers;
-  }
+  getMarkers(): Observable<Measurement[]> {
+    return this.http
+        .get("https://api.openaq.org/v1/measurements?country=FR")
+        .pipe(map(result=>result["results"]))
+}
 
   getMarkerById(id) {
     return this.markers.filter((entry) => entry.id === id)[0];

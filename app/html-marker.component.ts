@@ -4,9 +4,9 @@ import { DataService } from './data.service';
 @Component({
   selector: 'html-marker',
   template: `
-    <h3>{{ data.name }}</h3>
+    <h3>{{ data.city }}</h3>
     <p>
-      {{ data.description }}
+      {{ data.value }}
     </p>
   `
 })

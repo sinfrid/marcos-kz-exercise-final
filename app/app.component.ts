@@ -31,8 +31,8 @@ export class AppComponent implements DoCheck {
     layers: [
       tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
     ],
-    zoom: 5,
-    center: latLng(46.879966, -121.726909)
+    zoom: 6,
+    center: latLng(51.505, -0.09)
   };
 
   constructor(private dataService: DataService, private resolver: ComponentFactoryResolver, private injector: Injector){}
@@ -42,12 +42,49 @@ export class AppComponent implements DoCheck {
     this.map = map;
   }
 
+  ngAfterViewInit(): void {
+    this.addMarker();
+  }
+
   addMarker() {
+
+      this.dataService.getMarkers().subscribe((res: any) => {
+        
+      for (const c of res) {
+        
+      // we need to pass in the dependency injector
+      const component = factory.create(this.injector);
+
+      // wire up the @Input() or plain variables (doesn't have to be strictly an @Input())
+      component.instance.data = res;
+
+      // we need to manually trigger change detection on our in-memory component
+      // s.t. its template syncs with the data we passed in
+      component.changeDetectorRef.detectChanges();
+
+
+      // pass in the HTML from our dynamic component
+      const popupContent = component.location.nativeElement;
+
+
+
+        const lat = c.coordinates["latitude"];
+        const lon = c.coordinates["longitude"];
+
+        const marker = L.marker([lat, lon])
+        
+        // add popup functionality
+        marker.bindPopup(popupContent).openPopup();
+        marker.addTo(this.map);
+
+      }
+    })
+    
     // simply iterate over the array of markers from our data service
     // and add them to the map
-    for(const entry of this.dataService.getMarkers()) {
-      // dynamically instantiate a HTMLMarkerComponent
-      const factory = this.resolver.resolveComponentFactory(HTMLMarkerComponent);
+    /*for(const entry of this.dataService.getMarkers()) {
+      debugger;
+
 
       // we need to pass in the dependency injector
       const component = factory.create(this.injector);
@@ -79,7 +116,7 @@ export class AppComponent implements DoCheck {
         markerInstance: m,
         componentInstance: component
       });
-    }
+    }*/
   }
 
   removeMarker(marker) {
