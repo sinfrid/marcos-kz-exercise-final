@@ -5,12 +5,12 @@ import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { HTMLMarkerComponent } from './html-marker.component';
-
+import { NgSelectModule } from '@ng-select/ng-select';
 import { DataService } from './data.service';
 
 
 @NgModule({
-  imports:      [ BrowserModule, FormsModule,HttpClientModule, LeafletModule.forRoot() ],
+  imports:      [ BrowserModule, FormsModule,HttpClientModule,NgSelectModule, LeafletModule.forRoot() ],
   declarations: [ AppComponent, HTMLMarkerComponent ],
   providers: [ DataService ],
   // IMPORTANT! Dynamic components need to be registered here

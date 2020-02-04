@@ -4,12 +4,13 @@ import {
   ComponentFactoryResolver,
   ComponentRef,
   Injector,
-  DoCheck
+  DoCheck,NgModule, ViewChild
 } from "@angular/core";
 
 import { tileLayer, latLng, marker, Marker } from "leaflet";
 import { HTMLMarkerComponent } from "./html-marker.component";
 import { DataService } from "./data.service";
+import {NgSelectModule, NgOption, NgSelectComponent} from '@ng-select/ng-select';
 
 interface MarkerMetaData {
   name: String;
@@ -23,6 +24,10 @@ interface MarkerMetaData {
   styleUrls: ["./app.component.css"]
 })
 export class AppComponent implements DoCheck {
+
+  isbeingSearched: boolean = false;
+  @ViewChild('select1') select1Comp: NgSelectComponent;
+
   public countries = [];
   map;
   markers: MarkerMetaData[] = [];
@@ -38,8 +43,8 @@ export class AppComponent implements DoCheck {
     private injector: Injector
   ) {}
 
-  onInit() :void{
-        
+  ngOnInit(){
+         this.getCountries();
   }
 
   onMapReady(map) {
@@ -49,7 +54,7 @@ export class AppComponent implements DoCheck {
 
   ngAfterViewInit(): void {
     this.addMarker('FR');
-    this.getCountries();
+   
   }
 
   addMarker(country) {
@@ -120,9 +125,8 @@ export class AppComponent implements DoCheck {
     });
   }
 
-    public refreshMap(event, country) {
-  
-      this.addMarker(country) 
+    public refreshMap(event) {
+      this.addMarker(event.code) 
       this.removeMarker();
     }
 
@@ -135,4 +139,21 @@ export class AppComponent implements DoCheck {
       entry.componentInstance.changeDetectorRef.detectChanges();
     });
   }
+
+  OnOpen(){
+      if(!this.isbeingSearched)
+      {
+        this.select1Comp.close()      
+      }
+    }
+
+    OnSearch(){
+      this.isbeingSearched = true;
+      this.select1Comp.open()
+    }
+
+    OnBlue(){
+      this.isbeingSearched = false;
+      this.select1Comp.close()
+    }
 }

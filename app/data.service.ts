@@ -59,9 +59,11 @@ private measurementsUrl = 'https://api.openaq.org/v1/measurements?country=';  //
       marker.description = `Some random value ${Math.random() * 100}`;
     }
   }
-  
+
   getCountries (){
-  return this.http.get(this.countryUrl);
+  return this.http
+  .get(this.countryUrl)
+  .pipe(map(result=>result["results"]));
   }
 
 }
